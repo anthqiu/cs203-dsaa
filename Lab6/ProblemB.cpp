@@ -1,4 +1,4 @@
-
+#include <iostream>
 
 int find(const int a[], int s, int e, int k) {
     int size = e - s + 1;
