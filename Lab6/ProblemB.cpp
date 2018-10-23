@@ -1,5 +1,31 @@
 
 
+int find(const int a[], int s, int e, int k) {
+    int size = e - s + 1;
+    int mid = (e - s) / 2;
+    int ak = a[mid];
+    int b[size];
+    int big = size - 1, small = 0;
+    for (int i = s; i <= e; i++) {
+        if (a[i] > ak) b[big--] = a[i];
+        else if (a[i] < ak) b[small++] = a[i];
+    }
+    int i = small;
+    while (i <= big) {
+        b[i++] = ak;
+    }
+    if (small <= k - 1 && big >= k - 1) {
+        return ak;
+    }
+    if (small > k - 1) {
+        return find(b, 0, small, k);
+    }
+    if (big < k - 1) {
+        big = big >= 0 ? big : 0;
+        return find(b, big, size - 1, k - big);
+    }
+}
+
 int main() {
     int T;
     scanf("%d", &T);
@@ -10,21 +36,7 @@ int main() {
         for (int i = 0; i < n; i++) {
             scanf("%d", &a[i]);
         }
-        int count = 1;
-        while (count > m) {
-            int b[n];
-            int mid = a[m];
-            int min = 0;
-            int max = n - 1;
-            for (int i = 0; i < n; i++) {
-                if (a[i] < mid) {
-                    b[min++] = a[i];
-                    count++;
-                } else if (a[i] > mid) {
-
-                }
-            }
-        }
-        printf("%d\n", a[m]);
+        int res = find(a, 0, n - 1, m);
+        printf("%d\n", res);
     }
 }
