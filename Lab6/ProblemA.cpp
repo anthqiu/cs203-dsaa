@@ -1,3 +1,6 @@
+//
+// Created by ayau on 10/29/18.
+//
 #include <iostream>
 
 int main() {
@@ -6,12 +9,21 @@ int main() {
     while (T-- > 0) {
         int n;
         scanf("%d", &n);
-        int max = -1;
+        int a[n];
         for (int i = 0; i < n; i++) {
-            int a;
-            scanf("%d", &a);
-            max = a > max ? a : max;
+            a[i] = 0;
         }
-        printf("%d\n", max);
+        for (int i = 0; i < n - 1; i++) {
+            int p, c;
+            scanf("%d%d", &p, &c);
+            a[c - 1]++;
+            a[p - 1]++;
+        }
+        for (int i = 1; i < n; i++) {
+            if (a[i] == 1) {
+                printf("%d ", i + 1);
+            }
+        }
+        printf("\n");
     }
 }
