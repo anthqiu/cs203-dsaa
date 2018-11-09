@@ -1,42 +1,53 @@
+//
+// Created by ayau on 10/29/18.
+//
 #include <iostream>
 
-int find(const int a[], int s, int e, int k) {
-    int size = e - s + 1;
-    int mid = (e - s) / 2;
-    int ak = a[mid];
-    int b[size];
-    int big = size - 1, small = 0;
-    for (int i = s; i <= e; i++) {
-        if (a[i] > ak) b[big--] = a[i];
-        else if (a[i] < ak) b[small++] = a[i];
-    }
-    int i = small;
-    while (i <= big) {
-        b[i++] = ak;
-    }
-    if (small <= k - 1 && big >= k - 1) {
-        return ak;
-    }
-    if (small > k - 1) {
-        return find(b, 0, small, k);
-    }
-    if (big < k - 1) {
-        big = big >= 0 ? big : 0;
-        return find(b, big, size - 1, k - big);
-    }
+void OutputPreOrder(int a[][2], int node) {
+    if (node == -1) return;
+    std::cout << node + 1 << " ";
+    OutputPreOrder(a, a[node][0]);
+    OutputPreOrder(a, a[node][1]);
 }
+
+void OutputInOrder(int a[][2], int node) {
+    if (node == -1) return;
+    OutputInOrder(a, a[node][0]);
+    std::cout << node + 1 << " ";
+    OutputInOrder(a, a[node][1]);
+}
+
+void OutputPostOrder(int a[][2], int node) {
+    if (node == -1) return;
+    OutputPostOrder(a, a[node][0]);
+    OutputPostOrder(a, a[node][1]);
+    std::cout << node + 1 << " ";
+}
+
 
 int main() {
     int T;
     scanf("%d", &T);
     while (T-- > 0) {
-        int n, m;
-        scanf("%d%d", &n, &m);
-        int a[n];
+        int n;
+        scanf("%d", &n);
+        int a[n][2];
         for (int i = 0; i < n; i++) {
-            scanf("%d", &a[i]);
+            for (int j = 0; j < 2; j++) {
+                a[i][j] = -1;
+            }
         }
-        int res = find(a, 0, n - 1, m);
-        printf("%d\n", res);
+        for (int i = 0; i < n - 1; i++) {
+            int p, s;
+            scanf("%d%d", &p, &s);
+            if (a[p - 1][0] == -1) a[p - 1][0] = s - 1;
+            else a[p - 1][1] = s - 1;
+        }
+        OutputPreOrder(a, 0);
+        std::cout << std::endl;
+        OutputInOrder(a, 0);
+        std::cout << std::endl;
+        OutputPostOrder(a, 0);
+        std::cout << std::endl;
     }
 }
