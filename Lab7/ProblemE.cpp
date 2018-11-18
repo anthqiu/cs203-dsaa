@@ -2,55 +2,77 @@
 
 using namespace std;
 
-struct Node {
-    int key;
-    Node *parent;
-    Node *left;
-    Node *right;
+struct MinHeap {
+    int a[100001];
 
-    explicit Node(int key) {
-        this->key = key;
-        left = nullptr;
-        right = nullptr;
-        parent = nullptr;
+    int count;
+
+    MinHeap() {
+        count = 0;
     }
+
+    void add(int item) {
+        a[++count] = item;
+        int k = count;
+        while (k > 1 && a[k / 2] > a[k]) {
+            swap(k / 2, k);
+            k = k / 2;
+        }
+    };
+
+    void swap(int i_pos, int j_pos) {
+        int tmp = a[i_pos];
+        a[i_pos] = a[j_pos];
+        a[j_pos] = tmp;
+    }
+
+    int rem() {
+        int rt = a[1];
+        swap(1, count);
+        count--;
+        int k = 1;
+        while (2 * k <= count) {
+            int j = 2 * k;
+            if (j < count && a[j] > a[j + 1]) j++;
+            if (a[k] > a[j]) {
+                swap(j, k);
+                k = j;
+            } else break;
+        }
+        return rt;
+    };
+
+    int query() {
+        if (count != 0)return a[1];
+    };
 };
-
-void *buildTree(int n, Node *a[]) {
-    int t = n / 2;
-    for (int i = 1; i < t; i++) {
-        a[i]->left = a[2 * i];
-        a[i]->right = a[2 * i + 1];
-        a[2 * i]->parent = a[i];
-        a[2 * i + 1]->parent = a[i];
-    }
-    if (n % 2 == 0) {
-        a[t]->left = a[n];
-        a[n]->parent = a[t];
-    } else {
-        a[t]->left = a[n - 1];
-        a[t]->right = a[n];
-        a[n - 1]->parent = a[t];
-        a[n]->parent = a[t];
-    }
-}
-
-void inOrder(Node *a) {
-    Node *node = &a[1];
-    if (node == nullptr) return;
-    inOrder(node->left);
-    scanf("%d", &node->key);
-    inOrder(node->right);
-}
 
 int main() {
     int T;
     scanf("%d", &T);
     while (T-- > 0) {
-        int n;
-        scanf("%d", &n);
-        Node *a[n + 1];
-        buildTree(n, a);
-
+        int n, k;
+        scanf("%d%d", &n, &k);
+        MinHeap mheap;
+        int a[n];
+        for (int i = 0; i < k; i++) {
+            int tmp;
+            scanf("%d", &tmp);
+            mheap.add(tmp);
+        }
+        for (int i = k; i < n; i++) {
+            int tmp;
+            scanf("%d", &tmp);
+            if (tmp < mheap.query()) {
+                printf("%d ", tmp);
+            } else {
+                printf("%d ", mheap.rem());
+                mheap.add(tmp);
+            }
+        }
+        while (mheap.count > 1) {
+            printf("%d ", mheap.rem());
+        }
+        printf("%d\n", mheap.rem());
     }
 }
